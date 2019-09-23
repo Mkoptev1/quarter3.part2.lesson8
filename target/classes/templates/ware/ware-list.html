@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Товары</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+</head>
+
+<body>
+    <div>
+        <h1>Список товаров</h1>
+        <br>
+        <!-- Ware filter -->
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Фильтр</h4>
+                    <form class="form-inline" th:action="@{/product}" method="GET">
+                       <input th:value="${name != null} ? ${name}" th:name="name" type="text" class="form-control" id="name" placeholder="Наименование товара">
+                        <input th:value="${minPrice != null} ? ${minPrice}" th:name="minPrice" type="number" class="form-control" id="minPrice" placeholder="Минимальная цена">
+                        <input th:value="${maxPrice != null} ? ${maxPrice}" th:name="maxPrice" type="number" class="form-control" id="maxPrice" placeholder="Максимальная цена">
+                        <button type="submit" class="btn btn-primary">Найти</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ware pagination rows per page -->
+        <br>
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Количество записей на страницу</h4>
+                    <form class="form-inline" th:action="@{/product}" method="GET">
+                        <select name="size">
+                            <option th:each="pageCountLoc : ${pageCountList}"
+                                    th:value="${pageCountLoc}"
+                                    th:selected="${size} == ${pageCountLoc} ? true : false"
+                                    th:text="${pageCountLoc}">
+                            </option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Выбрать</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ware record set -->
+        <br>
+        <div class="container">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                <tr>
+                    <th style="width: 10%">ID</th>
+                    <th>Наименование товара</th>
+                    <th>Цена товара</th>
+                    <th style="width: 10%"/>
+                    <th style="width: 10%"/>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="crsWare : ${page.getContent()}" >
+                    <td th:text="${crsWare.id}">null</td>
+                    <td th:text="${crsWare.title}">null</td>
+                    <td th:text="${crsWare.price}">null</td>
+                    <td>
+                        <a th:href="@{'/product/edit-product?id=' + ${crsWare.id}}" class="btn btn-primary">Редактировать</a>
+                    </td>
+                    <td>
+                        <a th:href="@{'/product/del-product/' + ${crsWare.id}}" class="btn btn-danger">Удалить</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <br>
+
+        <!-- Ware pagination -->
+        <br>
+        <nav aria-label="Pagination" th:if="${page.totalPages gt 0}">
+            <ul class="pagination justify-content-center font-weight-bold">
+                <li class="page-item" th:classappend="${page.number eq 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/product(size=${size},pages=${page.number lt 2 ? 1 : page.number})}"
+                       aria-label="Previous" title="Предыдущая страница" data-toggle="tooltip">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${i eq page.number + 1} ? 'active'"
+                    th:each="i : ${#numbers.sequence( 1, page.totalPages, 1)}">
+                    <a class="page-link" th:href="@{/product(size=${size},pages=${i})}" th:text="${i}"
+                       th:title="${'Страница '+ i}" data-toggle="tooltip"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${page.number + 1 eq page.totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/product(size=${size},pages=${page.number + 2})}"
+                       aria-label="Next" title="Следующая страница" data-toggle="tooltip">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <br>
+        <div class="link-main-page_bottom">
+            <a th:href="@{/}">На главную</a>
+        </div>
+    </div>
+    <br>
+</body>
+</html>

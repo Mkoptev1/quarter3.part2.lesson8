@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+
+    <title>Корзина</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+    <div th:replace="~{navigation :: navigation(Cart)}" />
+
+    <h1>Корзина</h1>
+
+    <table class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>Cart ID</th>
+            <th>Product ID</th>
+            <th>Client ID</th>
+            <th>Наименование товара</th>
+            <th>Цена</th>
+            <th>Количество</th>
+            <th/>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="crsCart : ${Cart}" >
+            <td th:text="${crsCart.cartId}"/>
+            <td th:text="${crsCart.productId}"/>
+            <td th:text="${crsCart.clientId}"/>
+            <td th:text="${crsCart.product.title}"/>
+            <td th:text="${crsCart.productCost}"/>
+            <td th:text="${crsCart.productAmount}"/>
+            <td>
+                <a class="btn btn-primary" th:href="@{/cart/del(idp = ${crsCart.productId}, idc = ${crsCart.clientId})}">Удалить из корзины</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
